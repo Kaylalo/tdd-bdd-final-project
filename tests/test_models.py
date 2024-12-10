@@ -114,6 +114,14 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found_product.description, product.description)
         self.assertEqual(found_product.price, product.price)
 
+   def test_update_with_no_id(self):
+        """It should raise DataValidationError if the product ID is missing"""
+        product = Product(name="Fedora", description="A red hat", price=12.50, available=True, category=Category.CLOTHS)
+        
+        # Try to update a product without an ID
+        with self.assertRaises(DataValidationError):
+            product.update()
+   
     def test_update_a_product(self):
         """It should Update a Product"""
         product = ProductFactory()
