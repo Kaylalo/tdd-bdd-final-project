@@ -40,17 +40,17 @@ class ProductFactory(factory.Factory):
     id = factory.Sequence(lambda n: n)
     name = FuzzyChoice(
         choices=[
-            "Hat",
-            "Pants",
             "Shirt",
-            "Apple",
-            "Banana",
-            "Pots",
+            "Pants",
+            "Jumper",
+            "Laptop",
+            "Handbag",
+            "TV",
             "Towels",
             "Ford",
-            "Chevy",
-            "Hammer",
-            "Wrench"
+            "Cake",
+            "Folder",
+            "Pen"
         ]
     )
     description = factory.Faker("text")
@@ -63,6 +63,6 @@ class ProductFactory(factory.Factory):
             Category.FOOD,
             Category.HOUSEWARES,
             Category.AUTOMOTIVE,
-            Category.TOOLS,
+            Category.STATIONERY,
         ]
     )
