@@ -189,3 +189,11 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.category, category)
+
+    def test_update_with_empty_id(self):
+    """Test updating a product with an empty ID raises DataValidationError"""
+    product = ProductFactory()
+    product.id = None  # Set ID to None to simulate the error condition
+    with self.assertRaises(DataValidationError):
+        product.update()
+        
