@@ -27,7 +27,7 @@ import os
 import logging
 import unittest
 from decimal import Decimal
-from service.models import Product, Category, db
+from service.models import Product, Category, db, DataValidationError
 from service import app
 from tests.factories import ProductFactory
 
@@ -87,7 +87,7 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         self.assertEqual(products, [])
         product = ProductFactory()
-        product.id = None
+  
         product.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(product.id)
@@ -189,3 +189,11 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.category, category)
+
+    def test_update_without_id(self):
+        """It should raise a DataValidationError if there's no ID"""
+        product = ProductFactory()
+        product.id = None  # Simulate an invalid product without an ID
+        with self.assertRaises(DataValidationError):
+            product.update()
+
