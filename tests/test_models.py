@@ -193,7 +193,52 @@ class TestProductModel(unittest.TestCase):
     def test_update_without_id(self):
         """It should raise a DataValidationError if there's no ID"""
         product = ProductFactory()
-        product.id = None  # Simulate an invalid product without an ID
+        product.id = None  
         with self.assertRaises(DataValidationError):
             product.update()
 
+    def test_deserialize(self):
+        data = {
+            "name": "Test Product",
+            "description": "A test product",
+            "price": "19.99",  
+            "available": "yes",
+            "category": "ELECTRONICS"
+        }
+        product = Product() 
+        with self.assertRaises(DataValidationError) as context:
+            product.deserialize(data)
+        # Assert the error message is as expected
+        self.assertEqual(str(context.exception), "Invalid type for boolean [available]: <class 'str'>")
+
+    def test_invalid_attribute_error(self):
+        data = {
+            "name": "Test Product",
+            "description": "A test product",
+            "price": "19.99",  # valid price
+            "available": True,  # valid boolean
+            "category": "INVALID_CATEGORY"
+        }
+        product = Product()  
+        with self.assertRaises(DataValidationError) as context:
+            product.deserialize(data)
+        self.assertTrue(
+            "Invalid attribute: INVALID_CATEGORY" in str(context.exception)
+        )
+
+    def test_type_error(self):
+        data = {
+            "name": "Test Product",
+            "description": "A test product",
+            "price": ["invalid", "price"], 
+            "available": True,  
+            "category": "ELECTRONICS"
+        }
+        product = Product() 
+        with self.assertRaises(DataValidationError) as context:
+            product.deserialize(data)
+        self.assertTrue(
+            "Invalid product: body of request contained bad or no data" in str(context.exception)
+        )
+   
+    
