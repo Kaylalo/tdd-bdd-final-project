@@ -87,7 +87,6 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         self.assertEqual(products, [])
         product = ProductFactory()
-  
         product.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(product.id)
@@ -193,7 +192,7 @@ class TestProductModel(unittest.TestCase):
     def test_update_without_id(self):
         """It should raise a DataValidationError if there's no ID"""
         product = ProductFactory()
-        product.id = None  
+        product.id = None
         with self.assertRaises(DataValidationError):
             product.update()
 
@@ -201,11 +200,11 @@ class TestProductModel(unittest.TestCase):
         data = {
             "name": "Test Product",
             "description": "A test product",
-            "price": "19.99",  
+            "price": "19.99",
             "available": "yes",
             "category": "ELECTRONICS"
         }
-        product = Product() 
+        product = Product()
         with self.assertRaises(DataValidationError) as context:
             product.deserialize(data)
         # Assert the error message is as expected
@@ -219,7 +218,7 @@ class TestProductModel(unittest.TestCase):
             "available": True,  # valid boolean
             "category": "INVALID_CATEGORY"
         }
-        product = Product()  
+        product = Product()
         with self.assertRaises(DataValidationError) as context:
             product.deserialize(data)
         self.assertTrue(
@@ -230,15 +229,13 @@ class TestProductModel(unittest.TestCase):
         data = {
             "name": "Test Product",
             "description": "A test product",
-            "price": ["invalid", "price"], 
-            "available": True,  
+            "price": ["invalid", "price"],
+            "available": True,
             "category": "ELECTRONICS"
         }
-        product = Product() 
+        product = Product()
         with self.assertRaises(DataValidationError) as context:
             product.deserialize(data)
         self.assertTrue(
             "Invalid product: body of request contained bad or no data" in str(context.exception)
         )
-   
-    
